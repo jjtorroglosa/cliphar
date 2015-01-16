@@ -1,0 +1,32 @@
+{
+    "name": "cliphar/cliphar",
+    "description": "PHP framework for CLI apps",
+    "keywords": ["microframework", "cli"],
+    "homepage": "http://github.com/jjtorroglosa/cliphar",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Cliphar\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Juan José Torroglosa",
+            "email": "jjtorroglosa@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "illuminate/container": "4.2.*@dev",
+        "container-interop/container-interop": "1.1.0",
+        "psr/log": "dev-master",
+        "symfony/console": "2.7.*@dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.6.*@dev"
+    },
+    "suggest": {
+        "symfony/yaml": ">=1.0.0",
+        "symfony/validator": ">=1.0.0"
+    }
+}
