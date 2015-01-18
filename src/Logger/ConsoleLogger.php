@@ -61,6 +61,7 @@ class ConsoleLogger extends AbstractLogger
      * @param OutputInterface $output
      * @param string $levelThresholdToStderr
      * @param array $verbosityLevelMap
+     * @param ConsoleMessageDecorator|null $decorator
      */
     public function __construct(
         OutputInterface $output,
@@ -71,7 +72,7 @@ class ConsoleLogger extends AbstractLogger
         $this->output = $output;
         $this->levelThresholdToStderr = $levelThresholdToStderr;
         $this->verbosityLevelMap = $verbosityLevelMap + $this->verbosityLevelMap;
-        $this->decorator = $decorator ? $decorator : new ConsoleMessageDecorator();
+        $this->decorator = $decorator ?: new ConsoleMessageDecorator();
     }
 
     /**
@@ -131,6 +132,6 @@ class ConsoleLogger extends AbstractLogger
      */
     private function getDecoratedMessage($level, $message)
     {
-        return $this->decorator->decorate($level, sprintf('%s', $message));
+        return $this->decorator->decorate($level, $message);
     }
 }
