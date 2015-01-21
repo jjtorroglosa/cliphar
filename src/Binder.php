@@ -28,10 +28,4 @@ interface Binder
      * @return mixed
      */
     public function bindToInstance($abstract, $instance);
-
-    /**
-     * @param string $abstract
-     * @param string $alias
-     */
-    public function alias($abstract, $alias);
 }

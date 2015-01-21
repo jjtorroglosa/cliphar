@@ -46,9 +46,4 @@ class LaravelBinderAdapter implements Binder
     {
         $this->container->instance($abstract, $instance);
     }
-
-    public function alias($abstract, $alias)
-    {
-        $this->container->alias($abstract, $alias);
-    }
 }
