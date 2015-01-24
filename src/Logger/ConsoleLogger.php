@@ -52,8 +52,9 @@ class ConsoleLogger extends AbstractLogger
      * @var string
      */
     private $levelThresholdToStderr;
+
     /**
-     * @var null
+     * @var ConsoleMessageDecorator|null
      */
     private $decorator;
 

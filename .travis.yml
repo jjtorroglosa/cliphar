@@ -11,4 +11,8 @@ script:
   - composer self-update
   - composer update --prefer-source
   - composer install --dev --prefer-source
-  - ./vendor/bin/phpunit --disallow-test-output --report-useless-tests
+  - ./vendor/bin/phpunit --disallow-test-output --report-useless-tests --coverage-clover=coverage.clover
+
+after_script:
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover

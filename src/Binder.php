@@ -9,6 +9,7 @@
  */
 
 namespace Cliphar;
+use Closure;
 
 /**
  * Interface Binder
@@ -17,7 +18,7 @@ interface Binder
 {
     /**
      * @param string $abstract
-     * @param string $concrete
+     * @param string|Closure $concrete
      * @return mixed
      */
     public function bind($abstract, $concrete);
