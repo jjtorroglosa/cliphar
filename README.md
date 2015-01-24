@@ -1,5 +1,7 @@
 # Cliphar
 
+[![Build Status](https://travis-ci.org/jjtorroglosa/cliphar.svg?branch=master)](https://travis-ci.org/jjtorroglosa/cliphar)
+
 A PHP framework to instantly create CLI apps
 
 ## 1. Features
