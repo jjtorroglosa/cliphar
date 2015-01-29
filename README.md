@@ -16,53 +16,55 @@ A PHP framework to instantly create CLI apps
 
 Just extend the BaseApplication class and implement the abstract methods:
 
-    <?php
+```php
+<?php
 
-    namespace Acme;
+namespace Acme;
 
-    use Cliphar\BaseApplication;
+use Cliphar\BaseApplication;
+
+/**
+ * Class Application
+ */
+class Application extends BaseApplication
+{
+    /**
+     * @return string
+     */
+    protected function getVersion()
+    {
+        return "1.0";
+    }
 
     /**
-     * Class Application
+     * @return string
      */
-    class Application extends BaseApplication
+    protected function getName()
     {
-        /**
-         * @return string
-         */
-        protected function getVersion()
-        {
-            return "1.0";
-        }
-
-        /**
-         * @return string
-         */
-        protected function getName()
-        {
-            return "Example application";
-        }
-
-        /**
-         * @return string[]
-         */
-        protected function getCommands()
-        {
-            return array(
-                'Acme\Command\ExampleCommand'
-            );
-        }
-
-        /**
-         * @return string[]
-         */
-        protected function getProviders()
-        {
-            return array(
-                'Cliphar\ServiceProvider\LoggerProvider'
-            );
-        }
+        return "Example application";
     }
+
+    /**
+     * @return string[]
+     */
+    protected function getCommands()
+    {
+        return array(
+            'Acme\Command\ExampleCommand'
+        );
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function getProviders()
+    {
+        return array(
+            'Cliphar\ServiceProvider\LoggerProvider'
+        );
+    }
+}
+```
 
 You can register commands appending to the array its FQCN or the instances directly. If you provide the FQCN,
 the framework will use the container to resolve the class.  The same apply to the service providers.
@@ -71,14 +73,16 @@ Commands must extend `Symfony\Component\Console\Command\Command`.
 
 Now, you can create a bootstrap.php that executes your app:
 
-    <?php
+```php
+<?php
 
-    use Acme\Application;
+use Acme\Application;
 
-    require __DIR__ . "/vendor/autoload.php";
+require __DIR__ . "/vendor/autoload.php";
 
-    $application = new Application();
-    $application->run();
+$application = new Application();
+$application->run();
+```
 
 That's it!.
 
