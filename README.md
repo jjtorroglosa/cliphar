@@ -90,8 +90,9 @@ Here you have a project template to create your apps: https://github.com/jjtorro
 
 ## 3. Generating a phar
 
-You can use https://github.com/box-project/box2 to create a self contained phar with your application.
-In the cliphar-skeleton project you can find a template box.json file.
+Just do `box build`. In the cliphar-skeleton project you have all the stuff configured to make this happen. Take a look at the [box.json](https://github.com/jjtorroglosa/cliphar-skeleton/blob/master/box.json) file there.
+
+For more info about box.json configuration and features see https://github.com/box-project/box2
 
 ## 4. Autowiring
 
