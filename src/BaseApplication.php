@@ -38,6 +38,10 @@ abstract class BaseApplication
      */
     private $symfonyApplication;
 
+    /**
+     * Runs the application
+     * @throws \Exception
+     */
     public final function run()
     {
         $factory = new ContainerFactory();
