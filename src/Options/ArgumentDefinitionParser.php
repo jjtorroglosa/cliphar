@@ -3,28 +3,28 @@
  * Created by IntelliJ IDEA.
  * User: juanjo
  * Date: 9/8/15
- * Time: 20:17
+ * Time: 21:42
  */
 
 namespace Cliphar\Options;
 
-use Cliphar\Options\Exception\OptionsParsingException;
-use Cliphar\Options\Model\Option;
-use Symfony\Component\Yaml\Exception\ParseException;
 
-class OptParser
+use Cliphar\Options\Exception\OptionsParsingException;
+use Cliphar\Options\Model\Argument;
+use Cliphar\Options\Model\Option;
+
+class ArgumentDefinitionParser
 {
     /**
-     * @param string $string
-     * @return Model\Option[]
+     * @param $string
+     * @return Argument
      * @throws OptionsParsingException
      */
     public function parse($string)
     {
-        $shortFormRegex= '(\|(?<shortForm>[a-zA-Z]))?';
         $optionalRegex = '(?<optional>[\?])';
         $defaultValueRegex = '[\=](?<default>[^\s]+|\"[A-Za-z0-9\s]+\")';
-        $regex = '/^\[(?<name>[a-zA-Z\_\-]+)'.$shortFormRegex.'\]('.$optionalRegex.'|'.$defaultValueRegex.')?$/';
+        $regex = '/^\<(?<name>[a-zA-Z\_\-]+)\>(' . $optionalRegex . '|' . $defaultValueRegex . ')?$/';
 
         $result = preg_match($regex, $string, $matches);
 
@@ -34,31 +34,32 @@ class OptParser
 
         $name = $matches['name'];
         $isRequired = $this->isRequired($matches);
-        $shortForm = isset($matches['shortForm']) ? $matches['shortForm'] : "";
         $defaultValue = $this->getDefaultValue($matches);
-        return array($name => new Option($isRequired, true, $name, $shortForm, $defaultValue));
+
+        return new Argument($name, $isRequired, $defaultValue);
     }
 
     /**
      * @param $matches
      * @return bool
+     * @throws OptionsParsingException
      */
     private function isRequired($matches)
     {
-        if (! isset($matches['optional'])) {
+        if (!isset($matches['optional'])) {
             return true;
         }
+
         switch ($matches['optional']) {
             case "":
-                $isRequired = true;
+                return true;
                 break;
             case "?":
-                $isRequired = false;
+                return false;
                 break;
             default:
-                throw new OptionsParsingException("Unexpected character found");
+                throw new OptionsParsingException("Unexpected character found. None or '?' expected");
         }
-        return $isRequired;
     }
 
     /**
@@ -68,6 +69,6 @@ class OptParser
     private function getDefaultValue($matches)
     {
         $defaultValue = isset($matches['default']) ? $matches['default'] : "";
-        return strtr($defaultValue, array("\""=> ""));
+        return strtr($defaultValue, array("\"" => ""));
     }
 }
