@@ -44,7 +44,7 @@ class InputDefinitionParser
 
         $regex = '/('.$optionRegex.'[\s]*)*('.$argumentRegex.'[\s]*)*/';
 
-        $option = $this->optionParser->parseOption($string);
+        $option = $this->optionParser->parse($string);
         return array($option->getName() => $option);
     }
 }

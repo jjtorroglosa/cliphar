@@ -19,7 +19,7 @@ class OptionDefinitionParser
      * @return Option
      * @throws OptionsParsingException
      */
-    public function parseOption($string)
+    public function parse($string)
     {
         $shortFormRegex = '(\|(?<shortForm>[a-zA-Z]))?';
         $optionalRegex = '(?<optional>[\?])';

@@ -10,7 +10,7 @@ namespace Cliphar\Options;
 
 use PHPUnit_Framework_TestCase;
 
-class ArgumentDefinitionParserTest extends PHPUnit_Framework_TestCase
+class ArgumentDefinitionParserUnitTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var ArgumentDefinitionParser
