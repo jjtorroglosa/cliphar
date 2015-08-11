@@ -23,10 +23,12 @@ class ArgumentDefinitionParser
     public function parse($string)
     {
         $optionalRegex = '(?<optional>[\?])';
-        $defaultValueRegex = '[\=](?<default>[^\s]+|\"[A-Za-z0-9\s]+\")';
-        $regex = '/^\<(?<name>[a-zA-Z\_\-]+)\>(' . $optionalRegex . '|' . $defaultValueRegex . ')?$/';
+        $defaultValueRegex = '[=](?<default>[A-Za-z0-9\-\_]+|"[^"]+")';
+        $regex = '/\<(?<name>[a-zA-Z\_\-]+)\>(?:' . $optionalRegex . '|' . $defaultValueRegex . ')?(?:\s|$)/';
 
         $result = preg_match($regex, $string, $matches);
+
+        var_dump($matches, $result);
 
         if (!$result) {
             throw new OptionsParsingException("Error parsing the options definition");

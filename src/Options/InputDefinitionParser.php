@@ -39,12 +39,18 @@ class InputDefinitionParser
      */
     public function parse($string)
     {
-        $optionRegex = '(?<option>\[[^\s]([^\"])+\")';
+        $optionRegex = '(?<option>\[[^\s]+\]|\[[^\s]+\]="[^"]+")';
         $argumentRegex = '(?<argument>\<[^\s](^\"]+)\")';
 
-        $regex = '/('.$optionRegex.'[\s]*)*('.$argumentRegex.'[\s]*)*/';
+        $regex = '/^('.$optionRegex.')$/';
+        $result = preg_match($regex, $string, $matches);
+        var_dump($matches);
+        if (!$result) {
+            throw new OptionsParsingException("Invalid opt string");
+        }
 
-        $option = $this->optionParser->parse($string);
+        $option = $this->optionParser->parse($matches["option"]);
+
         return array($option->getName() => $option);
     }
 }

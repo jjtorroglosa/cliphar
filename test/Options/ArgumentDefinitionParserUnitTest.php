@@ -52,11 +52,11 @@ class ArgumentDefinitionParserUnitTest extends PHPUnit_Framework_TestCase
 
     public function testArgumentWithValueWithSpaces()
     {
-        $string = '<argument>="default values  with spaces 2"';
+        $string = '<argument>="default #! values  with spaces 2"';
 
         $argument = $this->optParser->parse($string);
 
-        $this->assertEquals("default values  with spaces 2", $argument->getDefaultValue());
+        $this->assertEquals("default #! values  with spaces 2", $argument->getDefaultValue());
     }
 
     public function testArgumentWithValueAndOptionalIsError()
@@ -73,6 +73,14 @@ class ArgumentDefinitionParserUnitTest extends PHPUnit_Framework_TestCase
         $string = "<argument|o>?=default";
 
         $this->setExpectedException('\Cliphar\Options\Exception\OptionsParsingException');
+
+        $argument = $this->optParser->parse($string);
+    }
+
+    public function testSeveral()
+    {
+        $string = "[option] <aypaparl> <argument> ";
+
 
         $argument = $this->optParser->parse($string);
     }
