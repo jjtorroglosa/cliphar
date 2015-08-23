@@ -8,10 +8,10 @@
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace Cliphar\Options;
+namespace Cliphar\InputDefinition\Lexer;
 
 
-use Cliphar\Options\Exception\LexerException;
+use Cliphar\InputDefinition\Exception\LexerException;
 
 class DefinitionLexer
 {
@@ -27,33 +27,27 @@ class DefinitionLexer
     const T_OPTIONAL_MARK         = "T_OPTIONAL_MARK";
     const T_WHITESPACES           = "T_WHITESPACES";
 
-    private function getTokenToRegex()
-    {
-        $OPEN_OPTION_SYMBOL    = '^\[';
-        $CLOSE_OPTION_SYMBOL   = '^\]';
-        $OPEN_ARGUMENT_SYMBOL  = '^\<';
-        $CLOSE_ARGUMENT_SYMBOL = '^\>';
-        $NAME                  = '^[A-Za-z0-9\-\_]{2,}';
-        $ABBREV                = '^[A-Za-z]';
-        $ABBREV_SEPARATOR      = '^\|';
-        $STRING_WITH_SPACES    = '^"[^"]+"';
-        $EQUAL_SIGN            = '^=';
-        $OPTIONAL_MARK         = '^\?';
-        $WHITESPACES           = '^\s+';
+    private static $tokenToRegex = null;
 
-        return array(
-            self::T_OPEN_OPTION_SYMBOL    => $OPEN_OPTION_SYMBOL,
-            self::T_CLOSE_OPTION_SYMBOL   => $CLOSE_OPTION_SYMBOL,
-            self::T_OPEN_ARGUMENT_SYMBOL  => $OPEN_ARGUMENT_SYMBOL,
-            self::T_CLOSE_ARGUMENT_SYMBOL => $CLOSE_ARGUMENT_SYMBOL,
-            self::T_OPTIONAL_MARK         => $OPTIONAL_MARK,
-            self::T_EQUAL_SIGN            => $EQUAL_SIGN,
-            self::T_STRING_WITH_SPACES    => $STRING_WITH_SPACES,
-            self::T_NAME                  => $NAME,
-            self::T_ABBREV                => $ABBREV,
-            self::T_ABBREV_SEPARATOR      => $ABBREV_SEPARATOR,
-            self::T_WHITESPACES           => $WHITESPACES
-        );
+    private static function getTokenToRegex()
+    {
+        if (self::$tokenToRegex === null) {
+            self::$tokenToRegex = array(
+                self::T_OPEN_OPTION_SYMBOL    => '^\[',
+                self::T_CLOSE_OPTION_SYMBOL   => '^\]',
+                self::T_OPEN_ARGUMENT_SYMBOL  => '^\<',
+                self::T_CLOSE_ARGUMENT_SYMBOL => '^\>',
+                self::T_OPTIONAL_MARK         => '^\?',
+                self::T_EQUAL_SIGN            => '^=',
+                self::T_STRING_WITH_SPACES    => '^"[^"]+"',
+                self::T_NAME                  => '^[A-Za-z0-9\-\_]{2,}',
+                self::T_ABBREV                => '^[A-Za-z]',
+                self::T_ABBREV_SEPARATOR      => '^\|',
+                self::T_WHITESPACES           => '^\s+'
+            );
+        }
+
+        return self::$tokenToRegex;
     }
 
     /**
@@ -71,6 +65,10 @@ class DefinitionLexer
      */
     private $offset = 0;
 
+    /**
+     * @var string
+     */
+    private $lastOccurrence;
 
     /**
      * DefinitionLexer constructor.
@@ -82,21 +80,27 @@ class DefinitionLexer
         $this->strlen = strlen($string);
     }
 
-
     public function getNextToken()
     {
-        foreach ($this->getTokenToRegex() as $token => $regex) {
+        foreach (self::getTokenToRegex() as $token => $regex) {
             if ($this->offset >= $this->strlen) {
-                return array();
+                $this->lastOccurrence = array(null, null, null);
+                return $this->lastOccurrence;
             }
             $substr = substr($this->string, $this->offset);
             $result = preg_match('~'. $regex . '~', $substr, $matches, 0);
             if ($result) {
                 $this->offset += strlen($matches[0]);
-                return array($token, $matches[0], $this->offset);
+                $this->lastOccurrence = array($token, $matches[0], $this->offset);
+                return $this->lastOccurrence;
             }
         }
 
         throw new LexerException("Unexpected character found at: {$substr}". PHP_EOL);
+    }
+
+    public function getLastOccurrence()
+    {
+        return $this->lastOccurrence;
     }
 }

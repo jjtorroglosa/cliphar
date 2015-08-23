@@ -8,7 +8,7 @@
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace Cliphar\Options\Model;
+namespace Cliphar\InputDefinition\Model;
 
 class Option
 {
@@ -27,7 +27,7 @@ class Option
     /**
      * @var string
      */
-    private $shortForm;
+    private $abbreviatedName;
     /**
      * @var string
      */
@@ -39,15 +39,15 @@ class Option
      * @param boolean $isRequired
      * @param boolean $hasValue
      * @param string $name
-     * @param string $shortForm
+     * @param string $abbreviatedName
      * @param string $defaultValue
      */
-    public function __construct($isRequired, $hasValue, $name, $shortForm, $defaultValue)
+    public function __construct($isRequired, $hasValue, $name, $abbreviatedName, $defaultValue)
     {
         $this->isRequired = $isRequired;
         $this->hasValue = $hasValue;
         $this->name = $name;
-        $this->shortForm = $shortForm;
+        $this->abbreviatedName = $abbreviatedName;
         $this->defaultValue = $defaultValue;
     }
 
@@ -78,9 +78,18 @@ class Option
     /**
      * @return string
      */
-    public function getShortForm()
+    public function getAbbreviatedName()
     {
-        return $this->shortForm;
+        return $this->abbreviatedName;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasAbbreviatedName()
+    {
+        return $this->abbreviatedName !== null
+            && $this->abbreviatedName !== "";
     }
 
     /**
@@ -89,5 +98,14 @@ class Option
     public function getDefaultValue()
     {
         return $this->defaultValue;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasDefaultValue()
+    {
+        return $this->defaultValue !== null
+            && $this->defaultValue !== "";
     }
 }

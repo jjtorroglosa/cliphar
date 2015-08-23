@@ -8,13 +8,16 @@
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace Cliphar\Options;
+namespace Cliphar\InputDefinition;
 
+
+use Cliphar\InputDefinition\Lexer\DefinitionLexer;
+use PHPUnit_Framework_TestCase;
 
 class DefinitionLexerUnitTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var DefinitionLexer
+     * @var \Cliphar\InputDefinition\Lexer\DefinitionLexer
      */
     private $definitionLexer;
 
@@ -24,13 +27,13 @@ class DefinitionLexerUnitTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Cliphar\Options\Exception\LexerException
+     * @expectedException \Cliphar\InputDefinition\Exception\LexerException
      */
     public function testUnexpectedTokenThrowsException()
     {
         $this->definitionLexer = new DefinitionLexer("*");
 
-        $result = $this->definitionLexer->getNextToken();
+        $this->definitionLexer->getNextToken();
     }
 
     public function testOptionTokens()
@@ -61,8 +64,9 @@ class DefinitionLexerUnitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(DefinitionLexer::T_OPTIONAL_MARK, $token);
         $this->assertEquals("?", $string);
 
-        $array = $this->definitionLexer->getNextToken();
-        $this->assertEmpty($array);
+        list($token, $string) = $this->definitionLexer->getNextToken();
+        $this->assertNull($token);
+        $this->assertNull($string);
     }
 
     public function tesArgumentTokens()
@@ -97,12 +101,13 @@ class DefinitionLexerUnitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(DefinitionLexer::T_STRING_WITH_SPACES, $token);
         $this->assertEquals("\"quoted string\"", $string);
 
-        $array = $this->definitionLexer->getNextToken();
-        $this->assertEmpty($array);
+        list($token, $string) = $this->definitionLexer->getNextToken();
+        $this->assertNull($token);
+        $this->assertNull($string);
     }
 
     /**
-     * @expectedException Cliphar\Options\Exception\LexerException
+     * @expectedException \Cliphar\InputDefinition\Exception\LexerException
      */
     public function testException()
     {

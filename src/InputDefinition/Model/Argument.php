@@ -8,7 +8,7 @@
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace Cliphar\Options\Model;
+namespace Cliphar\InputDefinition\Model;
 
 
 class Argument

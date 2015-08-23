@@ -8,10 +8,14 @@
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace Cliphar\Options\Exception;
+namespace Cliphar\InputDefinition\Exception;
 
 use Exception;
 
 class OptionsParsingException extends Exception
 {
+    public function __construct($reason, $tokenFound, $valueFound, $position)
+    {
+        parent::__construct("{$reason}. Token {$tokenFound} with value '{$valueFound}' found at pos {$position}");
+    }
 }
