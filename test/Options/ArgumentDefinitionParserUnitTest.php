@@ -1,9 +1,11 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: juanjo
- * Date: 9/8/15
- * Time: 20:18
+/*
+ * Copyright (c) 2015 Juan José Torroglosa Ramón
+ *
+ * This file is part of the Cliphar package.
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
  */
 
 namespace Cliphar\Options;
@@ -79,7 +81,7 @@ class ArgumentDefinitionParserUnitTest extends PHPUnit_Framework_TestCase
 
     public function testSeveral()
     {
-        $string = "[option] <aypaparl> <argument> ";
+        $string = "[option] <option> <argument> ";
 
 
         $argument = $this->optParser->parse($string);

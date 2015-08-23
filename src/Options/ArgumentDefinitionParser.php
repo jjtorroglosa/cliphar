@@ -1,13 +1,14 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: juanjo
- * Date: 9/8/15
- * Time: 21:42
+/*
+ * Copyright (c) 2015 Juan José Torroglosa Ramón
+ *
+ * This file is part of the Cliphar package.
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
  */
 
 namespace Cliphar\Options;
-
 
 use Cliphar\Options\Exception\OptionsParsingException;
 use Cliphar\Options\Model\Argument;
@@ -27,8 +28,6 @@ class ArgumentDefinitionParser
         $regex = '/\<(?<name>[a-zA-Z\_\-]+)\>(?:' . $optionalRegex . '|' . $defaultValueRegex . ')?(?:\s|$)/';
 
         $result = preg_match($regex, $string, $matches);
-
-        var_dump($matches, $result);
 
         if (!$result) {
             throw new OptionsParsingException("Error parsing the options definition");

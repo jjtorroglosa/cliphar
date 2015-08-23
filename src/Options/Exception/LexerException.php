@@ -12,6 +12,6 @@ namespace Cliphar\Options\Exception;
 
 use Exception;
 
-class OptionsParsingException extends Exception
+class LexerException extends Exception
 {
 }
