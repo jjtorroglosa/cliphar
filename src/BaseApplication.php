@@ -23,6 +23,22 @@ use Symfony\Component\Console\Command\Command;
  */
 abstract class BaseApplication
 {
+    private static $instance;
+
+    /**
+     * @return static
+     */
+    public static function getInstance()
+    {
+        if (self::$instance === null) {
+            self::$instance = new static();
+        }
+
+        return self::$instance;
+    }
+
+    protected final function __construct() {}
+
     /**
      * @var ContainerInterface
      */
@@ -37,6 +53,11 @@ abstract class BaseApplication
      * @var SymfonyConsoleApplication
      */
     private $symfonyApplication;
+
+    /**
+     * @var Command
+     */
+    private $commands;
 
     /**
      * Runs the application
@@ -55,6 +76,11 @@ abstract class BaseApplication
         $this->registerCommands();
 
         $this->symfonyApplication->run();
+    }
+
+    public function getContainer()
+    {
+        return $this->container;
     }
 
     private function registerServices()
@@ -116,7 +142,18 @@ abstract class BaseApplication
     /**
      * @return string[]
      */
-    abstract protected function getCommands();
+    protected function getCommands()
+    {
+        return $this->commands;
+    }
+
+    /**
+     * @param Command $command
+     */
+    public function addCommand(Command $command)
+    {
+        $this->commands[$command->getName()] = $command;
+    }
 
     /**
      * @return string[]

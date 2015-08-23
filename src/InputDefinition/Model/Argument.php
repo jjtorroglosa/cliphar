@@ -53,7 +53,7 @@ class Argument
      */
     public function isRequired()
     {
-        return $this->required;
+        return $this->required && !$this->hasDefaultValue();
     }
 
     /**
@@ -66,6 +66,6 @@ class Argument
 
     public function hasDefaultValue()
     {
-        return $this->defaultValue !== "";
+        return $this->defaultValue !== null;
     }
 }

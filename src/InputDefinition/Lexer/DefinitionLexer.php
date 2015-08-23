@@ -39,7 +39,7 @@ class DefinitionLexer
                 self::T_CLOSE_ARGUMENT_SYMBOL => '^\>',
                 self::T_OPTIONAL_MARK         => '^\?',
                 self::T_EQUAL_SIGN            => '^=',
-                self::T_STRING_WITH_SPACES    => '^"[^"]+"',
+                self::T_STRING_WITH_SPACES    => '^"[^"]*"',
                 self::T_NAME                  => '^[A-Za-z0-9\-\_]{2,}',
                 self::T_ABBREV                => '^[A-Za-z]',
                 self::T_ABBREV_SEPARATOR      => '^\|',

@@ -10,8 +10,6 @@
 
 namespace Cliphar\InputDefinition;
 
-use Cliphar\InputDefinition\Exception\OptionsParsingException;
-use Cliphar\InputDefinition\InputDefinitionParser;
 use Cliphar\InputDefinition\Model\Option;
 use PHPUnit_Framework_TestCase;
 
@@ -28,6 +26,38 @@ class InputDefinitionParserTest extends PHPUnit_Framework_TestCase
         $this->inputDefinitionParser = new InputDefinitionParser();
     }
 
+    /**
+     * @expectedException \Cliphar\InputDefinition\Exception\OptionsParsingException
+     */
+    public function testFirstCharacterShouldBeOpeningOptionOrArgument()
+    {
+        $definition = " <arg_name>";
+
+        $argument = $this->inputDefinitionParser->parse($definition);
+    }
+
+    public function testNoParameters()
+    {
+        $definition = "";
+
+        $inputDefinition = $this->inputDefinitionParser->parse($definition);
+
+        $this->assertEmpty($inputDefinition->getArguments());
+        $this->assertEmpty($inputDefinition->getOptions());
+    }
+
+
+    /**
+     * @expectedException \Cliphar\InputDefinition\Exception\OptionsParsingException
+     */
+    public function testANameShouldBeEncounteredAfterOpenArgumentIndicator()
+    {
+        $definition = "< >";
+
+        $this->inputDefinitionParser->parse($definition);
+    }
+
+
     public function testSingleArgument()
     {
         $definition = "<arg_name>";
@@ -35,9 +65,9 @@ class InputDefinitionParserTest extends PHPUnit_Framework_TestCase
         $argument = $this->getFirstArgument($definition);
 
         $this->assertEquals("arg_name", $argument->getName());
-        $this->assertTrue($argument->isRequired());
+        $this->assertTrue($argument->isRequired(), "Argument should be required");
         $this->assertEmpty($argument->getDefaultValue());
-        $this->assertFalse($argument->hasDefaultValue());
+        $this->assertFalse($argument->hasDefaultValue(), "Argument shouldn't have a default value");
     }
 
     public function testNotRequiredArgument()
@@ -59,9 +89,39 @@ class InputDefinitionParserTest extends PHPUnit_Framework_TestCase
         $argument = $this->getFirstArgument($definition);
 
         $this->assertEquals("default_value", $argument->getName());
-        $this->assertTrue($argument->isRequired());
+        $this->assertFalse($argument->isRequired());
         $this->assertEquals("default value", $argument->getDefaultValue());
         $this->assertTrue($argument->hasDefaultValue());
+    }
+
+    /**
+     * @expectedException \Cliphar\InputDefinition\Exception\OptionsParsingException
+     */
+    public function testThatAWhitespaceShouldBeEncounteredAfterDefaultValue()
+    {
+        $definition = "<argument>=\"any value\"<another_argument>";
+
+        $this->inputDefinitionParser->parse($definition);
+    }
+
+    /**
+     * @expectedException \Cliphar\InputDefinition\Exception\OptionsParsingException
+     */
+    public function testThatAStringShouldBeEncounteredAfterEqualsSign()
+    {
+        $definition = "<argument>=<argument>";
+
+        $this->inputDefinitionParser->parse($definition);
+    }
+
+    /**
+     * @expectedException \Cliphar\InputDefinition\Exception\OptionsParsingException
+     */
+    public function testInvalidModifierEncountered()
+    {
+        $definition = "<argument><argument>";
+
+        $this->inputDefinitionParser->parse($definition);
     }
 
     public function testArgumentsList()
@@ -84,6 +144,16 @@ class InputDefinitionParserTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("any_option", $option->getName());
     }
 
+    /**
+     * @expectedException \Cliphar\InputDefinition\Exception\OptionsParsingException
+     */
+    public function testANameShouldBeEncounteredAfterOpenOptionIndicator()
+    {
+        $definition = "[ ]";
+
+        $this->inputDefinitionParser->parse($definition);
+    }
+
     public function testOptionWithAbbreviated()
     {
         $definition = "[any_option|o]";
@@ -93,6 +163,37 @@ class InputDefinitionParserTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("any_option", $option->getName());
         $this->assertEquals("o", $option->getAbbreviatedName());
         $this->assertTrue($option->isRequired());
+        $this->assertTrue($option->hasAbbreviatedName());
+    }
+
+    /**
+     * @expectedException \Cliphar\InputDefinition\Exception\OptionsParsingException
+     */
+    public function testAnAbbreviatedNameShouldExistAfterDelimiter()
+    {
+        $definition = "[name| ]";
+
+        $this->inputDefinitionParser->parse($definition);
+    }
+
+    /**
+     * @expectedException \Cliphar\InputDefinition\Exception\OptionsParsingException
+     */
+    public function testOptionShouldBeClosedAfterAbbreviatedName()
+    {
+        $definition = "[name|n";
+
+        $this->inputDefinitionParser->parse($definition);
+    }
+
+    /**
+     * @expectedException \Cliphar\InputDefinition\Exception\OptionsParsingException
+     */
+    public function testOptionShouldBeClosedAfterNameIfNoAbbreviatedName()
+    {
+        $definition = "[name";
+
+        $this->inputDefinitionParser->parse($definition);
     }
 
     public function testOptionNotRequried()
@@ -111,7 +212,7 @@ class InputDefinitionParserTest extends PHPUnit_Framework_TestCase
         $option = $this->getFirstOption($definition);
 
         $this->assertEquals("a value", $option->getDefaultValue());
-        $this->assertTrue($option->hasValue());
+        $this->assertTrue($option->hasDefaultValue());
     }
 
     public function testOptionsList()

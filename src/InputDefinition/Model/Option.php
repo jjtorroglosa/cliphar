@@ -56,15 +56,7 @@ class Option
      */
     public function isRequired()
     {
-        return $this->isRequired;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function hasValue()
-    {
-        return $this->hasValue;
+        return $this->isRequired && !$this->hasDefaultValue();
     }
 
     /**
@@ -105,7 +97,6 @@ class Option
      */
     public function hasDefaultValue()
     {
-        return $this->defaultValue !== null
-            && $this->defaultValue !== "";
+        return $this->defaultValue !== null;
     }
 }

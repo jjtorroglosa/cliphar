@@ -36,7 +36,7 @@ class InputDefinitionParser
     public function parse($string)
     {
         $this->lexer = new DefinitionLexer($string);
-        list($token) = $this->lexer->getNextToken();
+        list($token, $value, $position) = $this->lexer->getNextToken();
         $this->inputDefinition = new InputDefinition();
 
         switch ($token) {
@@ -46,8 +46,10 @@ class InputDefinitionParser
             case DefinitionLexer::T_OPEN_OPTION_SYMBOL:
                 $this->consumeOptionsList();
                 break;
+            case null:
+                break;
             default:
-                throw new OptionsParsingException("Expected argument or option", $token[0], $token[1], $token[2]);
+                throw new OptionsParsingException("Expected argument or option", $token, $value, $position);
         }
 
         return $this->inputDefinition;
@@ -148,7 +150,7 @@ class InputDefinitionParser
     private function consumeModifiers($token, $string, $pos)
     {
         $isOptional = false;
-        $defaultValue = "";
+        $defaultValue = null;
         switch ($token) {
             case DefinitionLexer::T_OPTIONAL_MARK:
                 $isOptional = true;
