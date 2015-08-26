@@ -14,8 +14,4 @@ use Exception;
 
 class InputDefinitionParsingException extends Exception
 {
-    public function __construct($reason, $tokenFound, $valueFound, $position)
-    {
-        parent::__construct("{$reason}. Token {$tokenFound} with value '{$valueFound}' found at pos {$position}");
-    }
 }
