@@ -10,9 +10,9 @@
 
 namespace Cliphar\Command;
 
-use Cliphar\BaseApplication;
 use Cliphar\InputDefinition\InputDefinitionParser;
 use Cliphar\InputDefinition\Model\InputDefinition;
+use Interop\Container\ContainerInterface;
 use ReflectionFunction;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -22,7 +22,25 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CommandFactory
 {
-    private static $parser;
+    /**
+     * @var InputDefinitionParser
+     */
+    private $parser;
+
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    /**
+     * CommandFactory constructor.
+     * @param ContainerInterface $container
+     */
+    public function __construct(ContainerInterface $container)
+    {
+        $this->parser = new InputDefinitionParser();
+        $this->container = $container;
+    }
 
     /**
      * @param string $name
@@ -31,17 +49,16 @@ class CommandFactory
      * @return Command
      * @throws \Cliphar\InputDefinition\Exception\OptionsParsingException
      */
-    public static function createCommand($name, $definition, $callable)
+    public function createCommand($name, $definition, $callable)
     {
-        self::$parser = self::$parser ?: new InputDefinitionParser();
-        $inputDefinition = self::$parser->parse($definition);
+        $inputDefinition = $this->parser->parse($definition);
 
         $command = new Command($name);
 
-        self::addArguments($inputDefinition, $command);
-        self::addOptions($inputDefinition, $command);
+        $this->addArguments($inputDefinition, $command);
+        $this->addOptions($inputDefinition, $command);
 
-        $command->setCode(self::getCallableWrapperFor($callable));
+        $command->setCode($this->getCallableWrapperFor($callable));
 
         return $command;
     }
@@ -51,7 +68,7 @@ class CommandFactory
      * @param Command $command
      * @return array
      */
-    private static function addArguments($inputDefinition, $command)
+    private function addArguments($inputDefinition, $command)
     {
         foreach ($inputDefinition->getArguments() as $argument) {
             $mode = $argument->isRequired()
@@ -70,7 +87,7 @@ class CommandFactory
      * @param InputDefinition $inputDefinition
      * @param Command $command
      */
-    private static function addOptions($inputDefinition, $command)
+    private function addOptions($inputDefinition, $command)
     {
         foreach ($inputDefinition->getOptions() as $option) {
             $shortcut = $option->hasAbbreviatedName()
@@ -90,22 +107,20 @@ class CommandFactory
         }
     }
 
-    private static function getCallableWrapperFor($callable)
+    private function getCallableWrapperFor($callable)
     {
         return function (InputInterface $inputInterface, OutputInterface $outputInterface) use ($callable) {
             $reflectionClosure = new ReflectionFunction($callable);
             $closureParameters = $reflectionClosure->getParameters();
             $parameters = array();
+            $container = $this->container;
 
-            if (count($closureParameters) > 0
-                && $closureParameters[0]->getClass()->getName() === 'Symfony\Component\Console\Input\InputInterface') {
-                $parameters[0] = $inputInterface;
-                array_shift($closureParameters);
-            }
-
-            $container = BaseApplication::getInstance()->getContainer();
             foreach ($closureParameters as $p) {
-                $parameters[] = $container->get($p->getClass()->getName());
+                if ($p->getClass()->getName() === 'Symfony\Component\Console\Input\InputInterface') {
+                    $parameters[] = $inputInterface;
+                } else {
+                    $parameters[] = $container->get($p->getClass()->getName());
+                }
             }
 
             array_merge(array($inputInterface, $parameters));

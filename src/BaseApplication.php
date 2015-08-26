@@ -10,6 +10,7 @@
 
 namespace Cliphar;
 
+use Cliphar\Command\CommandFactory;
 use Cliphar\Container\ContainerFactory;
 use Cliphar\Exception\InvalidCommandException;
 use Cliphar\Exception\InvalidServiceProviderException;
@@ -24,20 +25,6 @@ use Symfony\Component\Console\Command\Command;
 abstract class BaseApplication
 {
     private static $instance;
-
-    /**
-     * @return static
-     */
-    public static function getInstance()
-    {
-        if (self::$instance === null) {
-            self::$instance = new static();
-        }
-
-        return self::$instance;
-    }
-
-    protected final function __construct() {}
 
     /**
      * @var ContainerInterface
@@ -60,16 +47,32 @@ abstract class BaseApplication
     private $commands;
 
     /**
-     * Runs the application
-     * @throws \Exception
+     * @return static
      */
-    public final function run()
+    public static function getInstance()
+    {
+        if (self::$instance === null) {
+            self::$instance = new static();
+        }
+
+        return self::$instance;
+    }
+
+    protected final function __construct()
     {
         $factory = new ContainerFactory();
         $this->container = $factory->createLaravelContainer();
         $this->binder = $this->container->get('Cliphar\Binder');
         $this->symfonyApplication = new SymfonyConsoleApplication($this->getName(), $this->getVersion(), $this->binder);
+        $this->commandFactory = new CommandFactory($this->container);
+    }
 
+    /**
+     * Runs the application
+     * @throws \Exception
+     */
+    public final function run()
+    {
         $this->symfonyApplication->registerIO();
 
         $this->registerServices();
@@ -148,10 +151,13 @@ abstract class BaseApplication
     }
 
     /**
-     * @param Command $command
+     * @param $name
+     * @param $definition
+     * @param $callable
      */
-    public function addCommand(Command $command)
+    public function addCommand($name, $definition, $callable)
     {
+        $command = $this->commandFactory->createCommand($name, $definition, $callable);
         $this->commands[$command->getName()] = $command;
     }
 

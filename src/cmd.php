@@ -9,11 +9,9 @@
  */
 
 use Cliphar\BaseApplication;
-use Cliphar\Command\CommandFactory;
 
 if (! function_exists('cmd')) {
     function cmd($name, $definition, $callable) {
-        $cmd = CommandFactory::createCommand($name, $definition, $callable);
-        BaseApplication::getInstance()->addCommand($cmd);
+        BaseApplication::getInstance()->addCommand($name, $definition, $callable);
     }
 }
