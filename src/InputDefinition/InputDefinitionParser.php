@@ -10,7 +10,7 @@
 
 namespace Cliphar\InputDefinition;
 
-use Cliphar\InputDefinition\Exception\OptionsParsingException;
+use Cliphar\InputDefinition\Exception\InputDefinitionParsingException;
 use Cliphar\InputDefinition\Lexer\DefinitionLexer;
 use Cliphar\InputDefinition\Model\Argument;
 use Cliphar\InputDefinition\Model\InputDefinition;
@@ -31,7 +31,7 @@ class InputDefinitionParser
     /**
      * @param string $string
      * @return InputDefinition
-     * @throws \Cliphar\InputDefinition\Exception\OptionsParsingException
+     * @throws \Cliphar\InputDefinition\Exception\InputDefinitionParsingException
      */
     public function parse($string)
     {
@@ -49,7 +49,7 @@ class InputDefinitionParser
             case null:
                 break;
             default:
-                throw new OptionsParsingException("Expected argument or option", $token, $value, $position);
+                throw new InputDefinitionParsingException("Expected argument or option", $token, $value, $position);
         }
 
         return $this->inputDefinition;
@@ -68,7 +68,7 @@ class InputDefinitionParser
                     $this->consumeArgumentsList();
                     return;
                 default:
-                    throw new OptionsParsingException("Expected option or argument", $token, $value, $pos);
+                    throw new InputDefinitionParsingException("Expected option or argument", $token, $value, $pos);
             }
         }
     }
@@ -79,7 +79,7 @@ class InputDefinitionParser
 
         list($token, $string, $pos) = $this->lexer->getNextToken();
         if ($token !== DefinitionLexer::T_NAME) {
-            throw new OptionsParsingException("Expected T_NAME", $token, $string, $pos);
+            throw new InputDefinitionParsingException("Expected T_NAME", $token, $string, $pos);
         }
 
         $name = $string;
@@ -88,16 +88,16 @@ class InputDefinitionParser
         if ($token === DefinitionLexer::T_ABBREV_SEPARATOR) {
             list($token, $string, $pos) = $this->lexer->getNextToken();
             if ($token !== DefinitionLexer::T_ABBREV) {
-                throw new OptionsParsingException("Expected abbreviated name", $token, $string, $pos);
+                throw new InputDefinitionParsingException("Expected abbreviated name", $token, $string, $pos);
             }
             $abbreviated = $string;
 
             list($token, $string, $pos) = $this->lexer->getNextToken();
             if ($token !== DefinitionLexer::T_CLOSE_OPTION_SYMBOL) {
-                throw new OptionsParsingException("Expected T_CLOSE_OPTION_SYMBOL", $token, $string, $pos);
+                throw new InputDefinitionParsingException("Expected T_CLOSE_OPTION_SYMBOL", $token, $string, $pos);
             }
         } else if ($token !== DefinitionLexer::T_CLOSE_OPTION_SYMBOL) {
-            throw new OptionsParsingException("Expected abbreviated or close option", $token, $string, $pos);
+            throw new InputDefinitionParsingException("Expected abbreviated or close option", $token, $string, $pos);
         }
 
         list($token, $string, $pos) = $this->lexer->getNextToken();
@@ -123,13 +123,13 @@ class InputDefinitionParser
                 $name = $string;
                 break;
             default:
-                throw new OptionsParsingException("Expected T_NAME", $token, $string, $pos);
+                throw new InputDefinitionParsingException("Expected T_NAME", $token, $string, $pos);
         }
 
         list($token, $string, $pos) = $this->lexer->getNextToken();
 
         if ($token !== DefinitionLexer::T_CLOSE_ARGUMENT_SYMBOL) {
-            throw new OptionsParsingException("Expected '>'",$token, $string, $pos);
+            throw new InputDefinitionParsingException("Expected '>'",$token, $string, $pos);
         }
 
         list($token, $string, $pos) = $this->lexer->getNextToken();
@@ -145,7 +145,7 @@ class InputDefinitionParser
      * @param $pos
      * @return array
      * @throws \Cliphar\InputDefinition\Exception\LexerException
-     * @throws \Cliphar\InputDefinition\Exception\OptionsParsingException
+     * @throws \Cliphar\InputDefinition\Exception\InputDefinitionParsingException
      */
     private function consumeModifiers($token, $string, $pos)
     {
@@ -158,7 +158,7 @@ class InputDefinitionParser
             case DefinitionLexer::T_EQUAL_SIGN:
                 list($token, $string, $pos) = $this->lexer->getNextToken();
                 if ($token !== DefinitionLexer::T_STRING_WITH_SPACES) {
-                    throw new OptionsParsingException("Expected default value", $token, $string, $pos);
+                    throw new InputDefinitionParsingException("Expected default value", $token, $string, $pos);
                 }
                 $defaultValue = str_replace('"', '', $string);
                 break;
@@ -167,7 +167,7 @@ class InputDefinitionParser
             case null:
                 break;
             default:
-                throw new OptionsParsingException("Unexpected token found", $token, $string, $pos);
+                throw new InputDefinitionParsingException("Unexpected token found", $token, $string, $pos);
         }
 
         if ($token !== DefinitionLexer::T_WHITESPACES) {
@@ -178,7 +178,7 @@ class InputDefinitionParser
                 case null:
                     break;
                 default:
-                    throw new OptionsParsingException("Expected whitespace", $token, $string, $pos);
+                    throw new InputDefinitionParsingException("Expected whitespace", $token, $string, $pos);
             }
             return array($isOptional, $defaultValue);
         }

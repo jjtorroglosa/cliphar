@@ -12,7 +12,7 @@ namespace Cliphar\InputDefinition\Exception;
 
 use Exception;
 
-class OptionsParsingException extends Exception
+class InputDefinitionParsingException extends Exception
 {
     public function __construct($reason, $tokenFound, $valueFound, $position)
     {

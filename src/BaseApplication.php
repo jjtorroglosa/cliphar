@@ -14,8 +14,10 @@ use Cliphar\Command\CommandFactory;
 use Cliphar\Container\ContainerFactory;
 use Cliphar\Exception\InvalidCommandException;
 use Cliphar\Exception\InvalidServiceProviderException;
+use Cliphar\InputDefinition\Exception\InputDefinitionParsingException;
 use Cliphar\ServiceProvider;
 use Cliphar\Symfony\SymfonyConsoleApplication;
+use Exception;
 use Interop\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
 
@@ -65,6 +67,8 @@ abstract class BaseApplication
         $this->binder = $this->container->get('Cliphar\Binder');
         $this->symfonyApplication = new SymfonyConsoleApplication($this->getName(), $this->getVersion(), $this->binder);
         $this->commandFactory = new CommandFactory($this->container);
+
+        $this->symfonyApplication->registerIO();
     }
 
     /**
@@ -73,17 +77,28 @@ abstract class BaseApplication
      */
     public final function run()
     {
-        $this->symfonyApplication->registerIO();
-
         $this->registerServices();
         $this->registerCommands();
-
         $this->symfonyApplication->run();
     }
 
-    public function getContainer()
+    /**
+     * @param $name
+     * @param $definition
+     * @param $callable
+     */
+    public function addCommand($name, $definition, $callable)
     {
-        return $this->container;
+        try {
+            $command = $this->commandFactory->createCommand($name, $definition, $callable);
+            $this->commands[$command->getName()] = $command;
+        } catch (InputDefinitionParsingException $e) {
+            $this->symfonyApplication->renderException(
+                $e,
+                $this->container->get('Symfony\Component\Console\Output\OutputInterface')
+            );
+            exit(1);
+        }
     }
 
     private function registerServices()
@@ -148,17 +163,6 @@ abstract class BaseApplication
     protected function getCommands()
     {
         return $this->commands;
-    }
-
-    /**
-     * @param $name
-     * @param $definition
-     * @param $callable
-     */
-    public function addCommand($name, $definition, $callable)
-    {
-        $command = $this->commandFactory->createCommand($name, $definition, $callable);
-        $this->commands[$command->getName()] = $command;
     }
 
     /**

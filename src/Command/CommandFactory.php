@@ -47,7 +47,7 @@ class CommandFactory
      * @param string $definition
      * @param callable $callable
      * @return Command
-     * @throws \Cliphar\InputDefinition\Exception\OptionsParsingException
+     * @throws \Cliphar\InputDefinition\Exception\InputDefinitionParsingException
      */
     public function createCommand($name, $definition, $callable)
     {

@@ -27,7 +27,7 @@ class InputDefinitionParserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Cliphar\InputDefinition\Exception\OptionsParsingException
+     * @expectedException \Cliphar\InputDefinition\Exception\InputDefinitionParsingException
      */
     public function testFirstCharacterShouldBeOpeningOptionOrArgument()
     {
@@ -48,7 +48,7 @@ class InputDefinitionParserTest extends PHPUnit_Framework_TestCase
 
 
     /**
-     * @expectedException \Cliphar\InputDefinition\Exception\OptionsParsingException
+     * @expectedException \Cliphar\InputDefinition\Exception\InputDefinitionParsingException
      */
     public function testANameShouldBeEncounteredAfterOpenArgumentIndicator()
     {
@@ -95,7 +95,7 @@ class InputDefinitionParserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Cliphar\InputDefinition\Exception\OptionsParsingException
+     * @expectedException \Cliphar\InputDefinition\Exception\InputDefinitionParsingException
      */
     public function testThatAWhitespaceShouldBeEncounteredAfterDefaultValue()
     {
@@ -105,7 +105,7 @@ class InputDefinitionParserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Cliphar\InputDefinition\Exception\OptionsParsingException
+     * @expectedException \Cliphar\InputDefinition\Exception\InputDefinitionParsingException
      */
     public function testThatAStringShouldBeEncounteredAfterEqualsSign()
     {
@@ -115,7 +115,7 @@ class InputDefinitionParserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Cliphar\InputDefinition\Exception\OptionsParsingException
+     * @expectedException \Cliphar\InputDefinition\Exception\InputDefinitionParsingException
      */
     public function testInvalidModifierEncountered()
     {
@@ -145,7 +145,7 @@ class InputDefinitionParserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Cliphar\InputDefinition\Exception\OptionsParsingException
+     * @expectedException \Cliphar\InputDefinition\Exception\InputDefinitionParsingException
      */
     public function testANameShouldBeEncounteredAfterOpenOptionIndicator()
     {
@@ -167,7 +167,7 @@ class InputDefinitionParserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Cliphar\InputDefinition\Exception\OptionsParsingException
+     * @expectedException \Cliphar\InputDefinition\Exception\InputDefinitionParsingException
      */
     public function testAnAbbreviatedNameShouldExistAfterDelimiter()
     {
@@ -177,7 +177,7 @@ class InputDefinitionParserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Cliphar\InputDefinition\Exception\OptionsParsingException
+     * @expectedException \Cliphar\InputDefinition\Exception\InputDefinitionParsingException
      */
     public function testOptionShouldBeClosedAfterAbbreviatedName()
     {
@@ -187,7 +187,7 @@ class InputDefinitionParserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Cliphar\InputDefinition\Exception\OptionsParsingException
+     * @expectedException \Cliphar\InputDefinition\Exception\InputDefinitionParsingException
      */
     public function testOptionShouldBeClosedAfterNameIfNoAbbreviatedName()
     {
@@ -240,7 +240,7 @@ class InputDefinitionParserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Cliphar\InputDefinition\Exception\OptionsParsingException
+     * @expectedException \Cliphar\InputDefinition\Exception\InputDefinitionParsingException
      */
     public function testOptionsMustBeDefinedBeforeArguments()
     {
@@ -250,7 +250,7 @@ class InputDefinitionParserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Cliphar\InputDefinition\Exception\OptionsParsingException
+     * @expectedException \Cliphar\InputDefinition\Exception\InputDefinitionParsingException
      */
     public function testOptionError()
     {
@@ -261,7 +261,7 @@ class InputDefinitionParserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Cliphar\InputDefinition\Exception\OptionsParsingException
+     * @expectedException \Cliphar\InputDefinition\Exception\InputDefinitionParsingException
      */
     public function testParsingException()
     {
@@ -291,7 +291,7 @@ class InputDefinitionParserTest extends PHPUnit_Framework_TestCase
     /**
      * @param $definition
      * @return Option
-     * @throws \Cliphar\InputDefinition\Exception\OptionsParsingException
+     * @throws \Cliphar\InputDefinition\Exception\InputDefinitionParsingException
      */
     private function getFirstOption($definition)
     {
@@ -301,7 +301,7 @@ class InputDefinitionParserTest extends PHPUnit_Framework_TestCase
     /**
      * @param $definition
      * @return \Cliphar\InputDefinition\Model\Option[]
-     * @throws \Cliphar\InputDefinition\Exception\OptionsParsingException
+     * @throws \Cliphar\InputDefinition\Exception\InputDefinitionParsingException
      */
     private function getOptions($definition)
     {
