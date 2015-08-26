@@ -15,8 +15,6 @@ use Psr\Log\LogLevel;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
-use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -36,11 +34,8 @@ class SymfonyConsoleApplication extends Application
     }
 
 
-    public function registerIO()
+    public function registerIO($input, $output)
     {
-        $input = new ArgvInput();
-        $output = new ConsoleOutput();
-
         parent::configureIO($input, $output);
 
         $this->setFormatting($output);

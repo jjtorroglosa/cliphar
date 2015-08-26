@@ -42,8 +42,8 @@ class InputDefinitionParserTest extends PHPUnit_Framework_TestCase
 
         $inputDefinition = $this->inputDefinitionParser->parse($definition);
 
-        $this->assertEmpty($inputDefinition->getArguments());
-        $this->assertEmpty($inputDefinition->getOptions());
+        $this->assertCount(0, $inputDefinition->getArguments());
+        $this->assertCount(0, $inputDefinition->getOptions());
     }
 
 

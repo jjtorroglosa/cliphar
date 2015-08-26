@@ -20,6 +20,8 @@ use Cliphar\Symfony\SymfonyConsoleApplication;
 use Exception;
 use Interop\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 /**
  * Class BaseApplication
@@ -67,8 +69,9 @@ abstract class BaseApplication
         $this->binder = $this->container->get('Cliphar\Binder');
         $this->symfonyApplication = new SymfonyConsoleApplication($this->getName(), $this->getVersion(), $this->binder);
         $this->commandFactory = new CommandFactory($this->container);
-
-        $this->symfonyApplication->registerIO();
+        $this->input = new ArgvInput();
+        $this->output = new ConsoleOutput();
+        $this->symfonyApplication->registerIO($this->input, $this->output);
     }
 
     /**
@@ -79,7 +82,7 @@ abstract class BaseApplication
     {
         $this->registerServices();
         $this->registerCommands();
-        $this->symfonyApplication->run();
+        $this->symfonyApplication->run($this->input, $this->output);
     }
 
     /**

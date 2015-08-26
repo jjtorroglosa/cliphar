@@ -10,9 +10,6 @@
 
 namespace Cliphar\InputDefinition\Model;
 
-use Cliphar\InputDefinition\Model\Argument;
-use Cliphar\InputDefinition\Model\Option;
-
 class InputDefinition
 {
     /**
@@ -24,6 +21,16 @@ class InputDefinition
      * @var Argument[]
      */
     private $arguments;
+
+    /**
+     * InputDefinition constructor.
+     */
+    public function __construct()
+    {
+        $this->options = array();
+        $this->arguments = array();
+    }
+
 
     public function addOption(Option $option)
     {
