@@ -46,7 +46,7 @@ abstract class BaseApplication
     private $symfonyApplication;
 
     /**
-     * @var Command
+     * @var Command[]
      */
     private $commands;
 
@@ -72,6 +72,7 @@ abstract class BaseApplication
         $this->input = new ArgvInput();
         $this->output = new ConsoleOutput();
         $this->symfonyApplication->registerIO($this->input, $this->output);
+        $this->commands = array();
     }
 
     /**
@@ -116,7 +117,7 @@ abstract class BaseApplication
 
     private function registerCommands()
     {
-        foreach ($this->getCommands() as $c) {
+        foreach ($this->getAllCommands() as $c) {
             /** @var Command $command */
             $command = $this->resolveCommand($c);
 
@@ -163,10 +164,15 @@ abstract class BaseApplication
     /**
      * @return string[]
      */
-    protected function getCommands()
+    protected function getAllCommands()
     {
-        return $this->commands;
+        return array_merge($this->commands, $this->getCommands());
     }
+
+    /**
+     * @return string[]
+     */
+    abstract protected function getCommands();
 
     /**
      * @return string[]
