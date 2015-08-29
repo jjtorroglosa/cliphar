@@ -69,6 +69,7 @@ abstract class BaseApplication
         $this->container = $factory->createLaravelContainer();
         $this->binder = $this->container->get('Cliphar\Binder');
         $this->symfonyApplication = new SymfonyConsoleApplication($this->getName(), $this->getVersion(), $this->binder);
+        $this->symfonyApplication->setAutoExit(false);
         $this->commandFactory = $this->container->get('Cliphar\Command\CommandFactory');
         $this->input = new ArgvInput();
         $this->output = new ConsoleOutput();
@@ -84,7 +85,7 @@ abstract class BaseApplication
     {
         $this->registerServices();
         $this->registerCommands();
-        $this->symfonyApplication->run($this->input, $this->output);
+        return $this->symfonyApplication->run($this->input, $this->output);
     }
 
     /**
