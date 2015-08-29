@@ -35,11 +35,12 @@ class CommandFactory
     /**
      * CommandFactory constructor.
      * @param ContainerInterface $container
+     * @param InputDefinitionParser $parser
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, InputDefinitionParser $parser)
     {
-        $this->parser = new InputDefinitionParser();
         $this->container = $container;
+        $this->parser = $parser;
     }
 
     /**
@@ -123,7 +124,6 @@ class CommandFactory
                 }
             }
 
-            array_merge(array($inputInterface, $parameters));
             call_user_func_array($callable, $parameters);
         };
     }

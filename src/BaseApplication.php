@@ -15,6 +15,7 @@ use Cliphar\Container\ContainerFactory;
 use Cliphar\Exception\InvalidCommandException;
 use Cliphar\Exception\InvalidServiceProviderException;
 use Cliphar\InputDefinition\Exception\InputDefinitionParsingException;
+use Cliphar\InputDefinition\InputDefinitionParser;
 use Cliphar\ServiceProvider;
 use Cliphar\Symfony\SymfonyConsoleApplication;
 use Exception;
@@ -68,7 +69,7 @@ abstract class BaseApplication
         $this->container = $factory->createLaravelContainer();
         $this->binder = $this->container->get('Cliphar\Binder');
         $this->symfonyApplication = new SymfonyConsoleApplication($this->getName(), $this->getVersion(), $this->binder);
-        $this->commandFactory = new CommandFactory($this->container);
+        $this->commandFactory = $this->container->get('Cliphar\Command\CommandFactory');
         $this->input = new ArgvInput();
         $this->output = new ConsoleOutput();
         $this->symfonyApplication->registerIO($this->input, $this->output);

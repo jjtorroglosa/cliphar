@@ -17,10 +17,6 @@ class Option
      */
     private $isRequired;
     /**
-     * @var bool
-     */
-    private $hasValue;
-    /**
      * @var string
      */
     private $name;
@@ -37,15 +33,13 @@ class Option
     /**
      * Option constructor.
      * @param boolean $isRequired
-     * @param boolean $hasValue
      * @param string $name
      * @param string $abbreviatedName
      * @param string $defaultValue
      */
-    public function __construct($isRequired, $hasValue, $name, $abbreviatedName, $defaultValue)
+    public function __construct($isRequired, $name, $abbreviatedName, $defaultValue)
     {
         $this->isRequired = $isRequired;
-        $this->hasValue = $hasValue;
         $this->name = $name;
         $this->abbreviatedName = $abbreviatedName;
         $this->defaultValue = $defaultValue;

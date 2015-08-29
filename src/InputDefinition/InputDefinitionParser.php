@@ -103,7 +103,7 @@ class InputDefinitionParser
         list($token, $string, $pos) = $this->lexer->getNextToken();
         list($isOptional, $defaultValue) = $this->consumeModifiers($token, $string, $pos);
 
-        return new Option(!$isOptional, $defaultValue !== "", $name, $abbreviated, $defaultValue);
+        return new Option(!$isOptional, $name, $abbreviated, $defaultValue);
     }
 
     private function consumeArgumentsList()

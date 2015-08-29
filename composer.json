@@ -12,6 +12,11 @@
             "src/cmd.php"
         ]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Cliphar\\": "test/"
+        }
+    },
     "authors": [
         {
             "name": "Juan José Torroglosa",
