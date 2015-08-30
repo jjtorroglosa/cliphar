@@ -9,7 +9,9 @@
  */
 
 namespace Cliphar;
+
 use Closure;
+use Interop\Container\Exception\ContainerException;
 
 /**
  * Interface Binder
@@ -18,15 +20,22 @@ interface Binder
 {
     /**
      * @param string $abstract
-     * @param string|Closure $concrete
-     * @return mixed
+     * @param \Closure|string $concrete
+     * @throws ContainerException
      */
     public function bind($abstract, $concrete);
 
     /**
+     * @deprecated
      * @param string $abstract
      * @param mixed $instance
-     * @return mixed
      */
     public function bindToInstance($abstract, $instance);
+
+    /**
+     * @param $abstract
+     * @param \Closure|object|string $concrete
+     * @throws ContainerException
+     */
+    public function bindSingleton($abstract, $concrete);
 }
